@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive,onMounted } from 'vue';
-import { DeviceLaptopIcon, DeviceMobileIcon, DotsVerticalIcon } from 'vue-tabler-icons';
 const dataForm = reactive({
     browerApi: '',
     bool:'no',
