@@ -1,7 +1,7 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "boolservey",
+  "appId": "com.boolservey.app",
   "asar": true,
   "productName": "Bool Servey",
   "directories": {
@@ -26,7 +26,7 @@
         ]
       }
     ],
-    "icon": "public/ico.ico",
+    "icon": "dist/ico.ico",
     "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
   },
   "nsis": {

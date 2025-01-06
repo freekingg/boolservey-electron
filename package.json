@@ -1,6 +1,6 @@
 {
-    "name": "spikeadmin-vue",
-    "version": "5.1.0",
+    "name": "bool-servey",
+    "version": "5.5.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
