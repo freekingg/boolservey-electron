@@ -83,8 +83,11 @@ const fetchList = async () => {
                     const element = dataRes.data[index];
                     element.source = [];
                     for (let index2 = 1; index2 < jsonData.length; index2++) {
+                       
                         const element2 = jsonData[index2];
-                        if (element.QualificationId === +element2[0] && element.AnswerIds.includes(element2[7]+'')) {
+                        if (element.QualificationId === +element2[0] &&  element2[1] === 'ZIP'){
+                            element.AnswerIds = element.AnswerIds.toString()
+                        }else if (element.QualificationId === +element2[0] && element.AnswerIds.includes(element2[7]+'')) {
                             element.source.push(element2);
                         } else if (element.QualificationId === +element2[0] &&  element2[4] === 'Range'){
                             element.source.push(element2);
@@ -92,16 +95,10 @@ const fetchList = async () => {
                             element.source.push(element2);
                         }
                     }
-
-                    // for (let index3 = 1; index3 < element.source.length; index3++) {
-                    //     const element2 = element.source[index3];
-                    //     if (element.QualificationId === +element2[0]) {
-                    //         element.source.push(element2);
-                    //     }
-                    // }
+                  
                 }
                 result.value = dataRes.data;
-                console.log('result.value: ', result.value);
+                // console.log('result.value: ', result.value);
             })
             .catch((error) => {
                 console.error('读取文件失败:', error);
@@ -173,7 +170,7 @@ const headers = ref([
                         <span v-else class="text-clamp-1" style="white-space: initial">{{ it[8] }}</span>
                     </span>
                 </template>
-                <span v-else style="white-space: initial">{{ item.AnswerIds }}</span>
+                <span v-else style="white-space: initial; word-break: break-all">{{ item.AnswerIds }}</span>
             </template>
             <template v-slot:item.date="{ item }">
                 <span>{{ item.UpdateTimeStamp }}</span>
