@@ -3,7 +3,7 @@
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "com.boolservey.app",
   "asar": true,
-  "productName": "Bool Servey ${version}",
+  "productName": "Bool Servey ",
   "directories": {
     "output": "release/${version}"
   },
