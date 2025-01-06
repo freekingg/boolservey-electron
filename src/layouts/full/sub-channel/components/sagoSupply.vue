@@ -168,7 +168,9 @@ const bootHandle = async (item: any) => {
     }
 };
 
+let activeLineId:any = ref('')
 const quotaHandle = (item: any) => {
+    activeLineId.value = item.id
     let type = 'SAGO';
     let id = item.id;
     let countyCode = '';
@@ -270,7 +272,7 @@ const searchHandle = debounce(() => {
                     <Spinners />
                 </template>
                 <template v-slot:item.id="{ item }">
-                    <span style="width: 100px; cursor: pointer" @click="copyHandle(item.id)" class="text-subtitle-1 text-clamp-1">{{
+                    <span style="width: 100px; cursor: pointer" @click="copyHandle(item.id)" class="text-subtitle-1 text-clamp-1"  :class="{'text-error':activeLineId == item.id}">{{
                         item.id
                     }}</span>
                 </template>

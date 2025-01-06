@@ -177,7 +177,9 @@ const copyHandle = (value: any) => {
     });
 };
 
+let activeLineId:any = ref('')
 const quotaHandle = (item: any) => {
+    activeLineId.value = item.id
     let type = '';
     let id = '';
     let countyCode = '';
@@ -220,6 +222,7 @@ const bootHandle = async (item: any) => {
 };
 
 const startHandle = async (item: any, flag = true) => {
+    activeLineId.value = item.id
     return new Promise((resolve, reject) => {
         let url = channelUrl[item.open_type];
         item.loading = true;
@@ -350,7 +353,7 @@ const searchHandle = debounce(() => {
                     <Spinners />
                 </template>
                 <template v-slot:item.id="{ item }">
-                    <span style="width: 100px; cursor: pointer" @click="copyHandle(item.id)" class="text-subtitle-1 text-clamp-1">{{
+                    <span style="width: 100px; cursor: pointer" @click="copyHandle(item.id)" class="text-subtitle-1 text-clamp-1"  :class="{'text-error':activeLineId == item.id}">{{
                         item.id
                     }}</span>
                 </template>
@@ -384,7 +387,7 @@ const searchHandle = debounce(() => {
                             size="small"
                             rounded="pill"
                             variant="tonal"
-                            class="ml-auto mr-3"
+                            class="ml-auto mr-2"
                         >
                             复制
                         </v-btn>
@@ -395,7 +398,7 @@ const searchHandle = debounce(() => {
                             size="small"
                             rounded="pill"
                             variant="tonal"
-                            class="mr-3"
+                            class="mr-2"
                         >
                             配额
                         </v-btn>

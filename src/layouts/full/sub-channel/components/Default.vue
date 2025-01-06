@@ -101,7 +101,9 @@ const copyHandle = (value: any) => {
     });
 };
 
+let activeLineId:any = ref('')
 const startHandle = (item: any) => {
+    activeLineId.value = item.id
     item.loading = true;
     let url = channelUrl[item.open_type];
     let params = {
