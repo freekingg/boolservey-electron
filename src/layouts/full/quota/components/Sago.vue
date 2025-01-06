@@ -88,6 +88,8 @@ const fetchList = async () => {
                             element.source.push(element2);
                         } else if (element.QualificationId === +element2[0] &&  element2[4] === 'Range'){
                             element.source.push(element2);
+                        } else if (element.QualificationId === +element2[0] &&  element.AnswerCodes.includes(element2[9]+'')){
+                            element.source.push(element2);
                         }
                     }
 

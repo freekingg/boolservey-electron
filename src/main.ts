@@ -4,6 +4,7 @@ import App from './App.vue';
 import { router } from './router';
 import vuetify from './plugins/vuetify';
 import '@/scss/style.scss';
+import { isElectron } from '@/utils/helpers/index';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
@@ -39,10 +40,12 @@ app.use(Maska);
 app.use(VueApexCharts);
 app.use(VueEasyLightbox)
 app.use(vuetify).mount('#app').$nextTick(() => {
-    // Use contextBridge
-    window.ipcRenderer.on('main-process-message', (_event, message) => {
-      console.log(message)
-    })
+    if(isElectron()){
+      // Use contextBridge
+      window.ipcRenderer.on('main-process-message', (_event, message) => {
+        console.log(message)
+      })
+    }
   })
 //ScrollTop Use
 // app.use(VueScrollTo);

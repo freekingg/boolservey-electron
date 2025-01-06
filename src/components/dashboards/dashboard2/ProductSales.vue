@@ -7,15 +7,15 @@ const store = useStatisticsStore();
 
 /* Chart */
 const chartOptions = computed(() => {
-    let categories = store.statistics.line_chart?.time || [];
+    let categories = store.statistics?.line_chart?.time || [];
     let series = [];
     series.push({
         name: '成功',
-        data: store.statistics.line_chart?.earn || []
+        data: store.statistics?.line_chart?.earn || []
     });
     series.push({
         name: '核减',
-        data: store.statistics.line_chart?.final || []
+        data: store.statistics?.line_chart?.final || []
     });
     return {
         series,
