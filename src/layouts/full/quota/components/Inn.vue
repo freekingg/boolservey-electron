@@ -6,7 +6,8 @@ import { fetchWrapper } from '@/utils/helpers/fetch-wrapper';
 const baseUrl = `${import.meta.env.VITE_API_URL}/api-v1`;
 const quota = useQuotaStore();
 const result = ref([]);
-
+const resultData = ref([]);
+let activeType = ref('list');
 const dataForm = reactive({
     id: '',
     county: ''
@@ -15,13 +16,14 @@ const quotaData: any = computed(() => {
     return quota.quota || null;
 });
 onMounted(() => {
-    if(quotaData.value){
-        dataForm.id = quotaData.value.id
+    if (quotaData.value) {
+        dataForm.id = quotaData.value.id;
     }
 });
 
 const loading = ref(false);
-const fetchList = async () => {
+const fetchListDetail = async () => {
+    activeType.value = 'detail';
     if (!dataForm.id) return;
     loading.value = true;
     try {
@@ -34,10 +36,31 @@ const fetchList = async () => {
     }
 };
 
+const fetchList = async () => {
+    activeType.value = 'list';
+    if (!dataForm.id) return;
+    loading.value = true;
+    try {
+        const data: any = await fetchWrapper.get(`${import.meta.env.VITE_API_URL}/efficient/quota/${dataForm.id}?cname=innovate`);
+        resultData.value = data.data?.result;
+        console.log('resultData: ', resultData);
+        loading.value = false;
+    } catch (error) {
+        console.log(error);
+        loading.value = false;
+    }
+};
+
 const headers = ref([
     { title: 'QuestionCategory', key: 'QuestionCategory' },
     { title: 'Question', key: 'question' },
     { title: 'Detail', key: 'answer' }
+]);
+const headers2 = ref([
+    { title: '配额数量', key: 'quotaN' },
+    { title: '状态', key: 'quotaStatus' },
+    { title: '剩余数量', key: 'RemainingN' },
+    { title: '详情', key: 'detail' }
 ]);
 </script>
 <template>
@@ -56,14 +79,47 @@ const headers = ref([
             <v-btn color="primary" rounded="pill" class="ml-auto mr-2" :loading="loading" @click="fetchList()">
                 <v-icon class="mr-2">mdi-magnify</v-icon>配额
             </v-btn>
-            <v-btn color="primary" rounded="pill" class="ml-auto" :loading="loading" @click="fetchList()">
+            <v-btn color="primary" rounded="pill" class="ml-auto" :loading="loading" @click="fetchListDetail()">
                 <v-icon class="mr-2">mdi-magnify</v-icon>调查详情
             </v-btn>
         </v-col>
     </v-row>
 
-    <div class="border-table">
+    <div class="border-table" v-if="activeType === 'detail'">
         <v-data-table :headers="headers" :items="result" height="calc(100vh - 400px)" :loading="loading" fixed-header hide-default-footer>
+            <template v-slot:loading>
+                <Spinners />
+            </template>
+            <template v-slot:item.QuestionCategory="{ item }">
+                <span class="text-subtitle-1 text-success">{{ item.QuestionCategory }}</span>
+            </template>
+            <template v-slot:item.question="{ item }">
+                <span class="text-subtitle-1 text-success" style="white-space: break-spaces;">{{ item.QuestionText }}</span>
+            </template>
+            <template v-slot:item.answer="{ item }">
+                <div style="white-space: break-spaces; max-width: 500px" v-if="item.QuestionKey !== 'AGE'">
+                    <span class="text-subtitle-1" v-for="(it, index) in item.Options" :key="index">
+                        <span class="text-success">{{ it.OptionText }},</span>
+                    </span>
+                </div>
+                <div style="white-space: break-spaces; max-width: 800px" v-else>
+                    <span class="text-subtitle-1" v-for="(it, index) in item.Options" :key="index">
+                        <span class="text-success">{{ it.ageStart }} - {{ it.ageEnd }}</span>
+                    </span>
+                </div>
+            </template>
+        </v-data-table>
+    </div>
+
+    <div class="border-table" v-if="activeType === 'list'">
+        <v-data-table
+            :headers="headers2"
+            :items="resultData"
+            height="calc(100vh - 400px)"
+            :loading="loading"
+            fixed-header
+            hide-default-footer
+        >
             <template v-slot:loading>
                 <Spinners />
             </template>
@@ -73,16 +129,9 @@ const headers = ref([
             <template v-slot:item.question="{ item }">
                 <span class="text-subtitle-1 text-success">{{ item.QuestionText }}</span>
             </template>
-            <template v-slot:item.answer="{ item }">
-                <div style="white-space: break-spaces; max-width: 800px" v-if="item.QuestionKey !== 'AGE'">
-                    <span class="text-subtitle-1" v-for="(it, index) in item.Options" :key="index">
-                        <span class="text-success">{{ it.OptionText }},</span>
-                    </span>
-                </div>
-                <div style="white-space: break-spaces; max-width: 800px" v-else>
-                    <span class="text-subtitle-1" v-for="(it, index) in item.Options" :key="index">
-                        <span class="text-success">{{ it.ageStart }} - {{ it.ageEnd }}</span>
-                    </span>
+            <template v-slot:item.detail="{ item }">
+                <div style="white-space: break-spaces; max-width: 800px" v-if="item.targeting">
+                    <span class="text-success">{{ item.title }},</span>
                 </div>
             </template>
         </v-data-table>
