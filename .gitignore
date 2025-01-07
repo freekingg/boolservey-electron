@@ -8,7 +8,8 @@ node_modules/
 dist/
 release/
 release/*
-dist-electron/*
+dist-electron/*.js
+dist-electron
 
 # Compiled Java class files
 *.class
