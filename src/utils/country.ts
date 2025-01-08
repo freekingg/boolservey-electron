@@ -306,6 +306,12 @@ export const countries = [
       "channelCode": 18
   },
   {
+    "name": "瑞典",
+    "code": "SE",
+    "group": "欧洲",
+    "channelCode": 36
+  },
+  {
       "name": "奥地利",
       "code": "AT",
       "group": "欧洲",
