@@ -4,6 +4,14 @@
   "appId": "com.boolservey.app",
   "asar": true,
   "productName": "Bool Servey ",
+  "publish": [
+      {
+        "provider": "github",
+        "owner": "freekingg",
+        "repo": "boolservey-electron",
+        "token": "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"
+      }
+    ]
   "directories": {
     "output": "release/${version}"
   },

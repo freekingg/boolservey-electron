@@ -1,4 +1,6 @@
-import { app, BrowserWindow, ipcMain, screen  } from 'electron'
+import { app, BrowserWindow, ipcMain, screen, dialog  } from 'electron'
+import { autoUpdater }  from 'electron-updater';
+
 // import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -28,6 +30,9 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 let win: BrowserWindow | null
 
 function createWindow() {
+
+  autoUpdater.checkForUpdatesAndNotify();
+
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
   win = new BrowserWindow({
@@ -93,6 +98,47 @@ ipcMain.handle('open-brower', async (_event, args) => {
       reject(err)
     });
   })
+});
+
+
+
+// 自动更新事件处理
+autoUpdater.on('update-available', (info) => {
+  console.log('发现更新:', info);
+  // 可选择提示用户更新
+  dialog.showMessageBox(win, {
+    type: 'info',
+    buttons: ['更新', '稍后'],
+    title: '更新可用',
+    message: `发现新版本: ${info.version}\n\n是否立即更新？`
+  }).then((response) => {
+    if (response.response === 0) {
+      autoUpdater.downloadUpdate(); // 下载更新
+    }
+  });
+});
+
+autoUpdater.on('update-not-available', () => {
+  console.log('没有可用的更新');
+});
+
+autoUpdater.on('error', (error) => {
+  console.error('更新失败:', error);
+});
+
+autoUpdater.on('update-downloaded', (info: any) => {
+  console.log('更新已下载:', info);
+  // 下载完成后，提示用户重启应用进行安装
+  dialog.showMessageBox(win, {
+    type: 'info',
+    buttons: ['立即重启', '稍后'],
+    title: '更新下载完成',
+    message: `新版本已经下载完成。\n\n是否立即重启应用？`
+  }).then((response) => {
+    if (response.response === 0) {
+      autoUpdater.quitAndInstall(); // 重启并安装更新
+    }
+  });
 });
 
 app.whenReady().then(createWindow)
